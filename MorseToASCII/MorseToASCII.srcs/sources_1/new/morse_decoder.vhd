@@ -106,11 +106,11 @@ begin
                     else
                         -- Signal jadi low. Analisis durasi '1' nya.
                         if counter_one < THRESH_DASH then
-                            -- Input merupakan DOT ('0')
-                            shiftreg_inb <= shiftreg_inb(8 downto 0) & '0';
+                            -- Input merupakan DOT ('1')
+                            shiftreg_inb <= shiftreg_inb(8 downto 0) & '1';
                         else
                             -- Input merupakan DASH ('1')
-                            shiftreg_inb <= shiftreg_inb(8 downto 0) & '1';
+                            shiftreg_inb <= shiftreg_inb(7 downto 0) & '11';
                         end if;
                         
                         counter_one <= 0;
@@ -135,6 +135,9 @@ begin
                         end if;
                     else
                         -- Signal High lagi
+                        -- sisipkan '0' untuk memisahkan simbol dot/dash
+                        shiftreg_inb <= shiftreg_inb(8 downto 0) & '0';
+                        
                         counter_one <= 0;
                         counter_zero <= 0;
                         current_state <= SIGNAL_HIGH;
