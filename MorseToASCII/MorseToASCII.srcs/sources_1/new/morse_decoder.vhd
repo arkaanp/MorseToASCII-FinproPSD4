@@ -172,12 +172,12 @@ begin
                         when 173    => ascii_out <= x"46"; -- F (..-.) = 10101101
                         when 181    => ascii_out <= x"4C"; -- L (.-..) = 10110101
                         when 365    => ascii_out <= x"50"; -- P (.--.) = 101101101
+                        when 437    => ascii_out <= x"5A"; -- Z (--..) = 110110101
                         when 731    => ascii_out <= x"4A"; -- J (.---) = 1011011011
                         when 213    => ascii_out <= x"42"; -- B (-...) = 11010101
                         when 427    => ascii_out <= x"58"; -- X (-..-) = 110101011
                         when 429    => ascii_out <= x"43"; -- C (-.-.) = 110101101
                         when 859    => ascii_out <= x"59"; -- Y (-.--) = 1101011011
-                        when 873    => ascii_out <= x"5A"; -- Z (--..) = 1101101001
                         when 875    => ascii_out <= x"51"; -- Q (--.-) = 1101101011
                         
                         -- kalo morse tidak dikenal 
