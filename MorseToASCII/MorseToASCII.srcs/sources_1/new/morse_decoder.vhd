@@ -147,37 +147,37 @@ begin
                    
                     case to_integer(shiftreg_inb) is
                         -- 1 simbol
-                        when 1      => ascii_out <= x"45"; -- E (.) = 1
-                        when 3      => ascii_out <= x"54"; -- T (-) = 11
-        
+                        when 1      => ascii_out <= x"45"; -- E (.)     = 1
+                        when 3      => ascii_out <= x"54"; -- T (-)     = 11
+                    
                         -- 2 simbol
-                        when 5      => ascii_out <= x"49"; -- I (..) = 101
-                        when 11     => ascii_out <= x"41"; -- A (.-) = 1011
-                        when 13     => ascii_out <= x"4E"; -- N (-.) = 1101
-                        when 27     => ascii_out <= x"4D"; -- M (--) = 11011
+                        when 5      => ascii_out <= x"49"; -- I (..)    = 101
+                        when 11     => ascii_out <= x"41"; -- A (.-)    = 1011
+                        when 13     => ascii_out <= x"4E"; -- N (-.)    = 1101
+                        when 27     => ascii_out <= x"4D"; -- M (--)    = 11011
                         
                         -- 3 simbol
-                        when 21     => ascii_out <= x"53"; -- S (...) = 10101
-                        when 43     => ascii_out <= x"55"; -- U (..--) = 101011
-                        when 45     => ascii_out <= x"52"; -- R (.-.)  = 101101
-                        when 91     => ascii_out <= x"57"; -- W (.--)  = 1011011
-                        when 53     => ascii_out <= x"44"; -- D (-..)  = 110101
-                        when 107    => ascii_out <= x"4B"; -- K (-.-)  = 1101011
-                        when 109    => ascii_out <= x"47"; -- G (--.)  = 1101101
-                        when 219    => ascii_out <= x"4F"; -- O (---)  = 11011011
-
+                        when 21     => ascii_out <= x"53"; -- S (...)   = 10101
+                        when 43     => ascii_out <= x"55"; -- U (..--)  = 101011
+                        when 45     => ascii_out <= x"52"; -- R (.-.)   = 101101
+                        when 91     => ascii_out <= x"57"; -- W (.--)   = 1011011
+                        when 53     => ascii_out <= x"44"; -- D (-..)   = 110101
+                        when 107    => ascii_out <= x"4B"; -- K (-.-)   = 1101011
+                        when 109    => ascii_out <= x"47"; -- G (--.)   = 1101101
+                        when 219    => ascii_out <= x"4F"; -- O (---)   = 11011011
+                    
                         -- 4 simbol
-                        when 85     => ascii_out <= x"48"; -- H (....) = 1010101
-                        when 171    => ascii_out <= x"56"; -- V (...-) = 10101011
-                        when 173    => ascii_out <= x"46"; -- F (..-.) = 10101101
-                        when 181    => ascii_out <= x"4C"; -- L (.-..) = 10110101
-                        when 365    => ascii_out <= x"50"; -- P (.--.) = 101101101
-                        when 731    => ascii_out <= x"4A"; -- J (.---) = 1011011011
-                        when 213    => ascii_out <= x"42"; -- B (-...) = 11010101
-                        when 427    => ascii_out <= x"58"; -- X (-..--) = 110101011
-                        when 429    => ascii_out <= x"43"; -- C (-.-.) = 110101101
-                        when 859    => ascii_out <= x"59"; -- Y (-.---) = 1101011011
-                        when 873    => ascii_out <= x"5A"; -- Z (--..) = 1101101001
+                        when 85     => ascii_out <= x"48"; -- H (....)  = 1010101
+                        when 171    => ascii_out <= x"56"; -- V (...-)  = 10101011
+                        when 173    => ascii_out <= x"46"; -- F (..-.)  = 10101101
+                        when 181    => ascii_out <= x"4C"; -- L (.-..)  = 10110101
+                        when 365    => ascii_out <= x"50"; -- P (.--.)  = 101101101
+                        when 731    => ascii_out <= x"4A"; -- J (.----)  = 1011011011
+                        when 213    => ascii_out <= x"42"; -- B (-...)  = 11010101
+                        when 427    => ascii_out <= x"58"; -- X (-..-) = 110101011
+                        when 429    => ascii_out <= x"43"; -- C (-.-.)  = 110101101
+                        when 859    => ascii_out <= x"59"; -- Y (-.--) = 1101011011
+                        when 873    => ascii_out <= x"5A"; -- Z (--..)  = 1101101001
                         when 875    => ascii_out <= x"51"; -- Q (--.-) = 1101101011
                         
                         -- kalo morse tidak dikenal 
