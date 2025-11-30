@@ -165,7 +165,7 @@ begin
                         when 107    => ascii_out <= x"4B"; -- K (-.-)  = 1101011
                         when 109    => ascii_out <= x"47"; -- G (--.)  = 1101101
                         when 219    => ascii_out <= x"4F"; -- O (---)  = 11011011
-                        
+
                         -- 4 simbol
                         when 85     => ascii_out <= x"48"; -- H (....) = 1010101
                         when 171    => ascii_out <= x"56"; -- V (...-) = 10101011
@@ -180,8 +180,8 @@ begin
                         when 873    => ascii_out <= x"5A"; -- Z (--..) = 1101101001
                         when 875    => ascii_out <= x"51"; -- Q (--.-) = 1101101011
                         
-                        -- Default: Unknown character
-                        when others => ascii_out <= x"3F"; -- '?' untuk kode tidak dikenal 
+                        -- kalo morse tidak dikenal 
+                        when others => ascii_out <= x"3F"; -- ? 
                     end case;
                     
                     -- Reset untuk letter selanjutnya
