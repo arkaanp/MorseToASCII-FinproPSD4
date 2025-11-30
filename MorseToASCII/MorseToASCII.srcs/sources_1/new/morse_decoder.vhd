@@ -194,6 +194,7 @@ begin
 
                 -- State: NEXT WORD
                 when DECODE_SPACE =>
+                    ascii_out <= x"20"; -- ASCII space
                     valid_out <= '1';
                     counter_zero   <= 0;
                     counter_one <= 0;
