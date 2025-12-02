@@ -96,7 +96,7 @@ begin
                             shiftreg_inb <= shiftreg_inb(8 downto 0) & '1';
                         else
                             -- Input merupakan DASH ('1')
-                            shiftreg_inb <= shiftreg_inb(7 downto 0) & '11';
+                            shiftreg_inb <= shiftreg_inb(7 downto 0) & "11";
                         end if;
                         
                         counter_one <= 0;
