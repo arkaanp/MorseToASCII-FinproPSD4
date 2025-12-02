@@ -190,7 +190,7 @@ begin
                     -- Reset untuk letter selanjutnya
                     shiftreg_inb <= "0000000000";
                     -- Kembali ke IDLE
-                    current_state <= IDLE; 
+                    current_state <= SIGNAL_LOW; 
 
                 -- State: NEXT WORD
                 when DECODE_SPACE =>
