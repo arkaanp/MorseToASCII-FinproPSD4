@@ -1,6 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use std.textio.all;
+use ieee.std_logic_textio.all;
 
 entity morse_decoder is
     port (
@@ -189,4 +191,56 @@ begin
         end if;
     end process;
 
+    -- Write the output to .txt file
+    TXT_OUTPUT: process(clk)
+        file output_file        : text open write_mode is "output.txt";
+        variable current_line   : line;
+        variable char_count     : integer := 0; 
+        variable word_count     : integer := 0; 
+        variable ascii_int      : integer;
+        variable char           : character;
+    begin
+        if rising_edge(clk) then
+            if reset = '1' then
+                -- Check if we have written anything to the current line.
+                -- If we have, save it before resetting the counters.
+                if word_count > 0 or char_count > 0 then
+                    writeline(output_file, current_line);
+                end if;
+
+                char_count := 0;
+                word_count := 0;
+
+            elsif valid_out = '1' then
+                
+                ascii_int := to_integer(unsigned(ascii_out));
+                char := character'val(ascii_int);
+                
+                -- Logic for SPACE
+                if char = ' ' then
+                    write(current_line, char); 
+                    word_count := word_count + 1;
+                    char_count := 0; 
+                    
+                    -- Check Sentence Limit (16 Words)
+                    if word_count >= 16 then
+                        writeline(output_file, current_line); 
+                        word_count := 0; 
+                    end if;
+                    
+                -- Logic for LETTERS
+                else
+                    -- Check Word Limit (32 Letters)
+                    if char_count < 32 then
+                        write(current_line, char);
+                        char_count := char_count + 1;
+                    else
+                        -- Ignore extra letters > 32
+                        null; 
+                    end if;
+                end if;
+            end if;
+        end if;
+    end process TXT_OUTPUT;
+            
 end architecture;
