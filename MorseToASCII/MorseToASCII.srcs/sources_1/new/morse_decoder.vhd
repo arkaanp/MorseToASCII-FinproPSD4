@@ -125,7 +125,7 @@ begin
                         end if;
                         
                         -- Cek letter timeout
-                        if (counter_zero = THRESH_CHAR_END) and (shiftreg_inb > 1) then
+                        if (counter_zero = THRESH_CHAR_END) and (shiftreg_inb >= 1) then
                             current_state <= DECODE_CHAR;
                             NL <= '1';
                         -- Cek word
