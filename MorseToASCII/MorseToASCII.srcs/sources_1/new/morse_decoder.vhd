@@ -9,23 +9,7 @@ entity morse_decoder is
         morse_in    : in  std_logic; 
         
         ascii_out   : out std_logic_vector(7 downto 0);
-        valid_out   : out std_logic; 
-        reg0        : out std_logic_vector(7 downto 0);
-        reg1        : out std_logic_vector(7 downto 0);
-        reg2        : out std_logic_vector(7 downto 0);
-        reg3        : out std_logic_vector(7 downto 0);
-        reg4        : out std_logic_vector(7 downto 0);
-        reg5        : out std_logic_vector(7 downto 0);
-        reg6        : out std_logic_vector(7 downto 0);
-        reg7        : out std_logic_vector(7 downto 0);
-        reg8        : out std_logic_vector(7 downto 0);
-        reg9        : out std_logic_vector(7 downto 0);
-        regA        : out std_logic_vector(7 downto 0);
-        regB        : out std_logic_vector(7 downto 0);
-        regC        : out std_logic_vector(7 downto 0);
-        regD        : out std_logic_vector(7 downto 0);
-        regE        : out std_logic_vector(7 downto 0);
-        regF        : out std_logic_vector(7 downto 0)
+        valid_out   : out std_logic
     );
 end entity morse_decoder;
 
