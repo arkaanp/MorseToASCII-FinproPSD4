@@ -1,261 +1,145 @@
-library IEEE;
-use IEEE.std_logic_1164.all;
-use IEEE.numeric_std.all;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
--- Entity tetap sama persis
 entity control_unit is
     port (
-        CLK             : in std_logic;
-        enable          : in std_logic;
-        RST             : in std_logic;
-        carry_flag      : in std_logic;
-        zero_flag       : in std_logic;
-        opcode          : in std_logic_vector(3 downto 0);
-        control_signals : out std_logic_vector(13 downto 0) -- [RAO,RAI,RBO,RBI,SUB,ALO,PCI,PCO,CNT,MRI,RMI,RMO,IRI,IRO]
+        clk         : in  std_logic;
+        reset       : in  std_logic;
+        morse_in    : in  std_logic;
+        flag_dash_thresh   : in std_logic;
+        flag_char_end      : in std_logic;
+        flag_space_end     : in std_logic;
+        flag_buff_has_data : in std_logic;
+        control_signals  : out std_logic_vector(4 downto 0) 
     );
 end entity control_unit;
 
-architecture rtl_classic_microprogram of control_unit is
+architecture microprogrammed of control_unit is
 
-    -- ### 1. Definisi Format Micro-Instruction ###
-    
-    -- Bit sekuensial (seperti di kode hipotetis Anda)
-    constant C_CTRL_BITS : integer := 14; -- 14 bit untuk sinyal kontrol
-    constant C_SEQ_BITS  : integer := 2;  -- 2 bit untuk sequencing
-    constant C_UCODE_WIDTH : integer := C_CTRL_BITS + C_SEQ_BITS; -- Total 16 bit
-    
-    -- Perintah sequencing
-    constant SEQ_NEXT   : std_logic_vector(1 downto 0) := "00"; -- Ambil uPC + 1
-    constant SEQ_DECODE : std_logic_vector(1 downto 0) := "01"; -- Lompat berdasarkan opcode
-    constant SEQ_FETCH  : std_logic_vector(1 downto 0) := "10"; -- Kembali ke alamat Fetch (0)
-    constant SEQ_HLT    : std_logic_vector(1 downto 0) := "11"; -- Berhenti (loop di uPC)
+    constant C_SEQ_BITS  : integer := 3;
+    constant C_CTRL_BITS : integer := 5;
+    constant C_UCODE_WIDTH : integer := C_SEQ_BITS + C_CTRL_BITS;
 
-    -- ### 2. Control Store (ROM) ###
+    constant SEQ_NEXT       : std_logic_vector(2 downto 0) := "000";
+    constant SEQ_JMP_HIGH   : std_logic_vector(2 downto 0) := "001";
+    constant SEQ_CHK_LOW    : std_logic_vector(2 downto 0) := "010";
+    constant SEQ_BRANCH_SYM : std_logic_vector(2 downto 0) := "011";
+    constant SEQ_CHK_RISE   : std_logic_vector(2 downto 0) := "100";
+    constant SEQ_RESET      : std_logic_vector(2 downto 0) := "111";
 
-    -- Kita butuh uPC yang lebih besar untuk memetakan alamat
-    subtype t_uAddress is unsigned(7 downto 0);
-    type t_control_store is array(0 to 255) of std_logic_vector(C_UCODE_WIDTH - 1 downto 0);
+    constant OUT_NOP          : std_logic_vector(4 downto 0) := "00000";
+    constant OUT_CLR_ALL      : std_logic_vector(4 downto 0) := "00001";
+    constant OUT_INC_ONE      : std_logic_vector(4 downto 0) := "00010";
+    constant OUT_INC_ZERO     : std_logic_vector(4 downto 0) := "00011";
+    constant OUT_CLR_CNTS     : std_logic_vector(4 downto 0) := "00100";
+    constant OUT_SHIFT_DOT    : std_logic_vector(4 downto 0) := "00101";
+    constant OUT_SHIFT_DASH   : std_logic_vector(4 downto 0) := "00110";
+    constant OUT_SHIFT_SEP    : std_logic_vector(4 downto 0) := "00111";
+    constant OUT_DECODE_CHAR  : std_logic_vector(4 downto 0) := "01000";
+    constant OUT_DECODE_SPACE : std_logic_vector(4 downto 0) := "01001";
 
-    -- Helper function untuk membangun micro-instruction
+    subtype t_uAddress is integer range 0 to 15;
+    type t_control_store is array(0 to 15) of std_logic_vector(C_UCODE_WIDTH - 1 downto 0);
+
     function to_ucode(
-        ctrl : std_logic_vector(C_CTRL_BITS - 1 downto 0);
-        seq  : std_logic_vector(C_SEQ_BITS - 1 downto 0)
+        seq  : std_logic_vector(C_SEQ_BITS - 1 downto 0);
+        ctrl : std_logic_vector(C_CTRL_BITS - 1 downto 0)
     ) return std_logic_vector is
     begin
-        -- Format: [Seq(1:0), Ctrl(13:0)]
         return seq & ctrl;
     end function;
 
-    -- Alamat untuk Fetch & Alamat "lompat" untuk Opcode 
-    constant uADDR_FETCH1 : t_uAddress := "00000000"; -- Alamat 0
-    constant uADDR_FETCH2 : t_uAddress := "00000001"; -- Alamat 1
-    constant uADDR_FETCH3 : t_uAddress := "00000010"; -- Alamat 2
-    
-    -- =============TODO: Definisikan konstanta untuk alamat micro-routine setiap instruksi=============
-    -- Buat konstanta uADDR untuk setiap instruksi (NOP, LDA, STA, ADD, MAB, LDB, STB, MBA, JMP, CMP, SUB, HLT)
-    -- Format: constant uADDR_XXX1 : t_uAddress := "XXXXXXXX";
-    -- Contoh: constant uADDR_NOP1 : t_uAddress := "00010000"; -- Opcode 0000 -> alamat 16
-    -- Berikan jarak antar alamat untuk instruksi multi-cycle (jarak 2 untuk tiap instruction)
-    -- =================================================================================================
-    
-    constant uADDR_NOP1 : t_uAddress := "00000011"; 
-    constant uADDR_NOP2 : t_uAddress := "00000100";
-    constant uADDR_LDA1 : t_uAddress := "00000101"; 
-    constant uADDR_LDA2 : t_uAddress := "00000110";
-    constant uADDR_STA1 : t_uAddress := "00000111"; 
-    constant uADDR_STA2 : t_uAddress := "00001000";
-    constant uADDR_ADD  : t_uAddress := "00001001";  
-    constant uADDR_MAB  : t_uAddress := "00001010";  
-    constant uADDR_LDB1 : t_uAddress := "00001011"; 
-    constant uADDR_LDB2 : t_uAddress := "00001100";
-    constant uADDR_STB1 : t_uAddress := "00001101"; 
-    constant uADDR_STB2 : t_uAddress := "00001110";
-    constant uADDR_MBA  : t_uAddress := "00001111";  
-    constant uADDR_JMP  : t_uAddress := "00010000";  
-    constant uADDR_CMP  : t_uAddress := "00010001"; 
-    constant uADDR_SUB  : t_uAddress := "00010010";
-    constant uADDR_HLT  : t_uAddress := "00010011";
-    
-    -- Inisialisasi ROM
     function init_rom return t_control_store is
         variable rom : t_control_store := (others => (others => '0'));
-        
-        -- Konstanta 14-bit untuk sinyal kontrol FETCH (sudah lengkap sebagai contoh)
-        constant C_FETCH1 : std_logic_vector(13 downto 0) := "00000001010000"; -- PCO=1, MRI=1
-        constant C_FETCH2 : std_logic_vector(13 downto 0) := "00000000000110"; -- RMO=1, IRI=1
-        constant C_FETCH3 : std_logic_vector(13 downto 0) := "00000000000110"; -- RMO=1, IRI=1
-        
-        -- =============TODO: Definisikan konstanta 14-bit untuk sinyal kontrol setiap instruksi=============
-        -- 
-        -- Format konstanta: constant C_XXX1 : std_logic_vector(13 downto 0) := "XXXXXXXXXXXXXX";
-        -- 
-        -- Untuk bit Control Wordnya ingat kembali TP dan CS dan pastikan sudah benar
-        -- ==================================================================================================
-
-        constant C_LDA1  : std_logic_vector(13 downto 0) := "00000000010001"; 
-        constant C_LDA2  : std_logic_vector(13 downto 0) := "01000000100100"; 
-        constant C_STA1  : std_logic_vector(13 downto 0) := "00000000010001"; 
-        constant C_STA2  : std_logic_vector(13 downto 0) := "10000000101000"; 
-        constant C_LDB1  : std_logic_vector(13 downto 0) := "00000000010001"; 
-        constant C_LDB2  : std_logic_vector(13 downto 0) := "00010000100100"; 
-        constant C_STB1  : std_logic_vector(13 downto 0) := "00000000010001"; 
-        constant C_STB2  : std_logic_vector(13 downto 0) := "00100000101000"; 
-        constant C_MAB   : std_logic_vector(13 downto 0) := "10010000100000"; 
-        constant C_MBA   : std_logic_vector(13 downto 0) := "01100000100000"; 
-        constant C_NOP1  : std_logic_vector(13 downto 0) := "00000000000000"; 
-        constant C_NOP2  : std_logic_vector(13 downto 0) := "00000000100000"; 
-        constant C_JMP   : std_logic_vector(13 downto 0) := "00000010100001"; 
-        constant C_CMP   : std_logic_vector(13 downto 0) := "00001000100000"; 
-        constant C_ADD   : std_logic_vector(13 downto 0) := "01000100100000"; 
-        constant C_SUB   : std_logic_vector(13 downto 0) := "01001100100000"; 
-        constant C_HLT   : std_logic_vector(13 downto 0) := "00000000000000"; 
-        
     begin
-        -- ### Siklus Fetch (3 cycles) - SORRY INI HARUSNYA BEGINI ###
-        rom(to_integer(uADDR_FETCH1)) := to_ucode(C_FETCH1, SEQ_NEXT);   -- CC1: PCO=1, MRI=1 -> lanjut ke FETCH2
-        rom(to_integer(uADDR_FETCH2)) := to_ucode(C_FETCH2, SEQ_NEXT);   -- CC2: RMO=1, IRI=1 -> lanjut ke FETCH3
-        rom(to_integer(uADDR_FETCH3)) := to_ucode(C_FETCH3, SEQ_DECODE); -- CC3: RMO=1, IRI=1 -> decode opcode
-        
-        -- ===========TODO: Isi ROM dengan micro-routines untuk setiap instruksi=============
-        -- 
-        -- Gunakan fungsi to_ucode(control_signal_constant, sequencing_command)
-        -- - Parameter 1: Konstanta control signal (misal C_NOP1, C_LDA1, dll)
-        -- - Parameter 2: Perintah sequencing (SEQ_NEXT, SEQ_FETCH, SEQ_DECODE, atau SEQ_HLT)
-        -- 
-        -- Sequencing command menentukan kemana uPC akan melompat setelah cycle ini:
-        -- - SEQ_NEXT   : Lanjut ke alamat berikutnya (uPC + 1)
-        -- - SEQ_FETCH  : Kembali ke awal FETCH (uADDR_FETCH1)
-        -- - SEQ_DECODE : Decode opcode dan lompat ke instruksi yang sesuai
-        -- - SEQ_HLT    : Berhenti, tetap di alamat yang sama (loop forever)
-        -- 
-        -- Ini akan mirip dengan state machine pada modul sebelumnya, tapi di sini kita hanya mengisi ROM
-        -- dengan micro-instructions yang sesuai untuk setiap instruksi.
-        -- Kalo bingung liat yang fetch kayak gimana ngisinya.
-        -- ====================================================================================
-        rom(to_integer(uADDR_NOP1)) := to_ucode(C_NOP1, SEQ_NEXT); 
-        rom(to_integer(uADDR_NOP2)) := to_ucode(C_NOP2, SEQ_FETCH); 
-        
-        rom(to_integer(uADDR_LDA1)) := to_ucode(C_LDA1, SEQ_NEXT);   
-        rom(to_integer(uADDR_LDA2)) := to_ucode(C_LDA2, SEQ_FETCH);  
-        
-        rom(to_integer(uADDR_STA1)) := to_ucode(C_STA1, SEQ_NEXT);  
-        rom(to_integer(uADDR_STA2)) := to_ucode(C_STA2, SEQ_FETCH);  
-        
-        rom(to_integer(uADDR_ADD))  := to_ucode(C_ADD, SEQ_FETCH);   
-        
-        rom(to_integer(uADDR_MAB))  := to_ucode(C_MAB, SEQ_FETCH);   
-        
-        rom(to_integer(uADDR_LDB1)) := to_ucode(C_LDB1, SEQ_NEXT);   
-        rom(to_integer(uADDR_LDB2)) := to_ucode(C_LDB2, SEQ_FETCH);  
-        
-        rom(to_integer(uADDR_STB1)) := to_ucode(C_STB1, SEQ_NEXT);  
-        rom(to_integer(uADDR_STB2)) := to_ucode(C_STB2, SEQ_FETCH);  
-        
-        rom(to_integer(uADDR_MBA))  := to_ucode(C_MBA, SEQ_FETCH);  
-        
-        rom(to_integer(uADDR_JMP))  := to_ucode(C_JMP, SEQ_FETCH); 
-        
-        rom(to_integer(uADDR_CMP))  := to_ucode(C_CMP, SEQ_FETCH);  
-        
-        rom(to_integer(uADDR_SUB))  := to_ucode(C_SUB, SEQ_FETCH);   
-        
-        rom(to_integer(uADDR_HLT))  := to_ucode(C_HLT, SEQ_HLT);   
-       
-        
+        rom(0) := to_ucode(SEQ_JMP_HIGH,   OUT_CLR_ALL);
+        rom(1) := to_ucode(SEQ_CHK_LOW,    OUT_INC_ONE);
+        rom(2) := to_ucode(SEQ_BRANCH_SYM, OUT_NOP);
+        rom(3) := to_ucode(SEQ_NEXT,       OUT_SHIFT_DOT); 
+        rom(4) := to_ucode(SEQ_NEXT,       OUT_SHIFT_DASH);
+        rom(5) := to_ucode(SEQ_CHK_RISE,   OUT_INC_ZERO);
+        rom(6) := to_ucode(SEQ_JMP_HIGH,   OUT_SHIFT_SEP);
+        rom(7) := to_ucode(SEQ_NEXT,       OUT_DECODE_CHAR); 
+        rom(8) := to_ucode(SEQ_NEXT,       OUT_CLR_CNTS); 
+        rom(9) := to_ucode(SEQ_RESET,      OUT_NOP);      
+        rom(10) := to_ucode(SEQ_RESET,     OUT_DECODE_SPACE);
+
         return rom;
     end function;
 
-    -- Buat ROM
     constant Control_Store : t_control_store := init_rom;
 
-    -- ### 3. Sinyal Internal ###
-    
-    -- Micro-Program Counter (uPC)
-    signal uPC     : t_uAddress := uADDR_FETCH1;
+    signal uPC      : t_uAddress := 0;
     signal Next_uPC : t_uAddress;
-    
-    -- Micro-Instruction Register (uIR)
-    signal uIR : std_logic_vector(C_UCODE_WIDTH - 1 downto 0);
-    
+    signal uIR      : std_logic_vector(C_UCODE_WIDTH - 1 downto 0);
+
 begin
 
-    -- ### PROSES 1: uPC Register (State Register) ###
-    uPC_REGISTER: process(CLK) is
+    process(clk, reset)
     begin
-        if enable = '1' and rising_edge(CLK) then
-            if RST = '1' then
-                uPC <= uADDR_FETCH1; -- Reset kembali ke Fetch (alamat 0)
-            else
-                uPC <= Next_uPC;
-            end if;
+        if reset = '1' then
+            uPC <= 0;
+        elsif rising_edge(clk) then
+            uPC <= Next_uPC;
         end if;
-    end process uPC_REGISTER;
+    end process;
 
-    -- ### PROSES 2: Pembacaan ROM (Moore) ###
-    -- Baca micro-instruction dari ROM berdasarkan uPC saat ini
-    uIR <= Control_Store(to_integer(uPC));
+    uIR <= Control_Store(uPC);
 
-    -- ### PROSES 3: Sequencer Logic (Menentukan uPC Berikutnya) ###
-    -- Ini adalah "otak" yang "bodoh" dari kode hipotetis Anda.
-    SEQUENCER_LOGIC: process(uPC, uIR, opcode, carry_flag, zero_flag)
-        variable seq_control : std_logic_vector(1 downto 0);
+    control_signals <= uIR(C_CTRL_BITS - 1 downto 0);
+
+    process(uPC, uIR, morse_in, flag_dash_thresh, flag_char_end, flag_space_end, flag_buff_has_data)
+        variable seq_cmd : std_logic_vector(C_SEQ_BITS - 1 downto 0);
     begin
-        -- Ekstrak 2 bit sequencing dari micro-instruction saat ini
-        seq_control := uIR(C_UCODE_WIDTH - 1 downto C_CTRL_BITS);
+        seq_cmd := uIR(C_UCODE_WIDTH - 1 downto C_CTRL_BITS);
         
-        -- Default: selalu increment (untuk jaga-jaga)
         Next_uPC <= uPC + 1;
 
-        case seq_control is
+        case seq_cmd is
             when SEQ_NEXT =>
-                -- Perintah: Ambil micro-instruction berikutnya secara berurutan
                 Next_uPC <= uPC + 1;
-                
-            when SEQ_FETCH =>
-                -- Perintah: Kembali ke awal siklus Fetch
-                Next_uPC <= uADDR_FETCH1;
 
-            when SEQ_HLT =>
-                -- Perintah: Berhenti! Tetap di alamat ini selamanya.
-                Next_uPC <= uPC; 
+            when SEQ_RESET =>
+                Next_uPC <= 0;
 
-            when SEQ_DECODE =>
-                -- =============TODO: Implementasikan decoding opcode ke alamat micro-routine=============
-                -- Perintah: Lihat opcode dan lompat ke alamat micro-routine yang sesuai
-                -- Yaudah, mirip lah yak dengan state machine di modul sebelumnya.
-                -- =======================================================================================
+            when SEQ_JMP_HIGH =>
+                if morse_in = '1' then
+                    Next_uPC <= 1;
+                else
+                    Next_uPC <= uPC;
+                end if;
 
-                
-                case opcode is
-                    when "0000" => Next_uPC <= uADDR_NOP1;
-                    when "0001" => Next_uPC <= uADDR_LDA1;
-                    when "0010" => Next_uPC <= uADDR_STA1;
-                    when "0011" => Next_uPC <= uADDR_ADD;
-                    when "0100" => Next_uPC <= uADDR_MAB;
-                    when "0101" => Next_uPC <= uADDR_LDB1;
-                    when "0110" => Next_uPC <= uADDR_STB1;
-                    when "0111" => Next_uPC <= uADDR_MBA;
-                    when "1000" => Next_uPC <= uADDR_JMP;
-                    when "1001" => Next_uPC <= uADDR_CMP;
-                    when "1010" =>  if zero_flag = '1' then Next_uPC <= uADDR_JMP; else Next_uPC <= uADDR_FETCH1; end if;
-                    when "1011" =>  if zero_flag = '0' then Next_uPC <= uADDR_JMP; else Next_uPC <= uADDR_FETCH1; end if;
-                    when "1110" =>  if carry_flag = '0' then Next_uPC <= uADDR_JMP; else Next_uPC <= uADDR_FETCH1; end if;
-                    when "1101" =>  if carry_flag = '1' then Next_uPC <= uADDR_JMP; else Next_uPC <= uADDR_FETCH1; end if;
-                    when "1100" => Next_uPC <= uADDR_SUB;
-                    when "1111" => Next_uPC <= uADDR_HLT;
-                   
-                    when others => Next_uPC <= uADDR_FETCH1; 
-                end case;
+            when SEQ_CHK_LOW =>
+                if morse_in = '0' then
+                    Next_uPC <= 2;
+                else
+                    Next_uPC <= uPC;
+                end if;
+
+            when SEQ_BRANCH_SYM =>
+                if flag_dash_thresh = '1' then
+                    Next_uPC <= 4;
+                else
+                    Next_uPC <= 3;
+                end if;
+
+            when SEQ_CHK_RISE =>
+                if morse_in = '1' then
+                    Next_uPC <= 6;
+                else
+                    if (flag_space_end = '1') then
+                        Next_uPC <= 10;
+                    elsif (flag_char_end = '1' and flag_buff_has_data = '1') then
+                        Next_uPC <= 7;
+                    else
+                        Next_uPC <= uPC;
+                    end if;
+                end if;
+
             when others =>
-                -- Pengaman jika terjadi error
-                Next_uPC <= uADDR_FETCH1;
+                Next_uPC <= 0;
         end case;
-    end process SEQUENCER_LOGIC;
+    end process;
 
-    -- ### PROSES 4: Output Logic ###
-    -- Output-nya hanyalah 14 bit sinyal kontrol dari micro-instruction
-    control_signals <= uIR(13 downto 0);
-
-end architecture rtl_classic_microprogram;
-
-
+end architecture;
