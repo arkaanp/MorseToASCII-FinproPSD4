@@ -1,0 +1,292 @@
+#-----------------------------------------------------------
+# Vivado v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Sat Dec  6 21:11:20 2025
+# Process ID: 22276
+# Current directory: C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.runs/synth_1
+# Command line: vivado.exe -log tb_morse_specific.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source tb_morse_specific.tcl
+# Log file: C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.runs/synth_1/tb_morse_specific.vds
+# Journal file: C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.runs/synth_1\vivado.jou
+# Running On: LAPTOP-NT5EG3JT, OS: Windows, CPU Frequency: 2611 MHz, CPU Physical cores: 10, Host memory: 16806 MB
+#-----------------------------------------------------------
+source tb_morse_specific.tcl -notrace
+Command: synth_design -top tb_morse_specific -part xc7k70tfbv676-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7k70t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7k70t'
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 22660
+INFO: [Synth 8-11241] undeclared symbol 'REGCCE', assumed default net type 'wire' [C:/Xilinx/Vivado/2022.2/data/verilog/src/unimacro/BRAM_SINGLE_MACRO.v:2170]
+---------------------------------------------------------------------------------
+Starting Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 833.277 ; gain = 414.172
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'tb_morse_specific' [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:9]
+INFO: [Synth 8-3491] module 'morse_decoder' declared at 'C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/morse_decoder.vhd:7' bound to instance 'uut' of component 'morse_decoder' [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:35]
+INFO: [Synth 8-638] synthesizing module 'morse_decoder' [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/morse_decoder.vhd:18]
+INFO: [Synth 8-256] done synthesizing module 'morse_decoder' (0#1) [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/morse_decoder.vhd:18]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:46]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:115]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:117]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:67]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:75]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:126]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:130]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:133]
+INFO: [Synth 8-256] done synthesizing module 'tb_morse_specific' (0#1) [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:9]
+WARNING: [Synth 8-6014] Unused sequential element NW_reg was removed.  [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/morse_decoder.vhd:143]
+WARNING: [Synth 8-6014] Unused sequential element char_debug_reg was removed.  [C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.srcs/sources_1/new/testbench.vhd:55]
+---------------------------------------------------------------------------------
+Finished Synthesize : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 926.129 ; gain = 507.023
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:04 ; elapsed = 00:00:06 . Memory (MB): peak = 926.129 ; gain = 507.023
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7k70tfbv676-1
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xc7k70tfbv676-1
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 926.129 ; gain = 507.023
+---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'morse_decoder'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                    idle |                              000 |                              000
+             signal_high |                              001 |                              001
+              signal_low |                              010 |                              010
+             decode_char |                              011 |                              011
+            decode_space |                              100 |                              100
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'sequential' in module 'morse_decoder'
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 926.129 ; gain = 507.023
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   32 Bit       Adders := 4     
++---Registers : 
+	               32 Bit    Registers := 3     
+	               10 Bit    Registers := 1     
+	                8 Bit    Registers := 1     
+	                1 Bit    Registers := 2     
++---Muxes : 
+	   2 Input   32 Bit        Muxes := 5     
+	   5 Input   32 Bit        Muxes := 3     
+	   2 Input   10 Bit        Muxes := 2     
+	   9 Input   10 Bit        Muxes := 1     
+	   5 Input   10 Bit        Muxes := 1     
+	   5 Input    8 Bit        Muxes := 1     
+	  27 Input    7 Bit        Muxes := 1     
+	   2 Input    7 Bit        Muxes := 1     
+	   5 Input    3 Bit        Muxes := 1     
+	   2 Input    3 Bit        Muxes := 2     
+	   2 Input    1 Bit        Muxes := 3     
+	   4 Input    1 Bit        Muxes := 1     
+	   3 Input    1 Bit        Muxes := 2     
+	  10 Input    1 Bit        Muxes := 1     
+	   5 Input    1 Bit        Muxes := 8     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 240 (col length:80)
+BRAMs: 270 (col length: RAMB18 80 RAMB36 40)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-3332] Sequential element (uut/FSM_sequential_current_state_reg[2]) is unused and will be removed from module tb_morse_specific.
+WARNING: [Synth 8-3332] Sequential element (uut/FSM_sequential_current_state_reg[1]) is unused and will be removed from module tb_morse_specific.
+WARNING: [Synth 8-3332] Sequential element (uut/FSM_sequential_current_state_reg[0]) is unused and will be removed from module tb_morse_specific.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:08 ; elapsed = 00:00:27 . Memory (MB): peak = 1106.742 ; gain = 687.637
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:08 ; elapsed = 00:00:27 . Memory (MB): peak = 1106.742 ; gain = 687.637
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:08 ; elapsed = 00:00:27 . Memory (MB): peak = 1106.742 ; gain = 687.637
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:11 ; elapsed = 00:00:29 . Memory (MB): peak = 1106.742 ; gain = 687.637
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:11 ; elapsed = 00:00:29 . Memory (MB): peak = 1106.742 ; gain = 687.637
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:11 ; elapsed = 00:00:29 . Memory (MB): peak = 1106.742 ; gain = 687.637
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:11 ; elapsed = 00:00:29 . Memory (MB): peak = 1106.742 ; gain = 687.637
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:11 ; elapsed = 00:00:29 . Memory (MB): peak = 1106.742 ; gain = 687.637
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:11 ; elapsed = 00:00:29 . Memory (MB): peak = 1106.742 ; gain = 687.637
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++-+-----+------+
+| |Cell |Count |
++-+-----+------+
++-+-----+------+
+
+Report Instance Areas: 
++------+---------+-------+------+
+|      |Instance |Module |Cells |
++------+---------+-------+------+
+|1     |top      |       |     0|
++------+---------+-------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:11 ; elapsed = 00:00:29 . Memory (MB): peak = 1106.742 ; gain = 687.637
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 83 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:11 ; elapsed = 00:00:29 . Memory (MB): peak = 1106.742 ; gain = 687.637
+Synthesis Optimization Complete : Time (s): cpu = 00:00:11 ; elapsed = 00:00:29 . Memory (MB): peak = 1106.742 ; gain = 687.637
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1106.742 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1212.570 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete, checksum: 6236d8a5
+INFO: [Common 17-83] Releasing license: Synthesis
+18 Infos, 83 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:12 ; elapsed = 00:00:31 . Memory (MB): peak = 1212.570 ; gain = 818.352
+INFO: [Common 17-1381] The checkpoint 'C:/College/Semester 3/PSD/MorseToASCII-FinproPSD4/MorseToASCII-FinproPSD4/MorseToASCII/MorseToASCII.runs/synth_1/tb_morse_specific.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file tb_morse_specific_utilization_synth.rpt -pb tb_morse_specific_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Sat Dec  6 21:11:57 2025...

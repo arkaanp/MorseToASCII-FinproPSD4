@@ -1,6 +1,8 @@
 # compile vhdl design source files
+vhdl2008 xil_defaultlib  \
+"../../../../MorseToASCII.srcs/sources_1/new/morse_decoder.vhd" \
+
 vhdl xil_defaultlib  \
-"../../../../../../../VHDL Dump/morse_decrypter.vhd" \
 "../../../../MorseToASCII.srcs/sources_1/new/testbench.vhd" \
 
 # Do not sort compile order
