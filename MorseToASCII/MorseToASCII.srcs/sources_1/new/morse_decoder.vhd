@@ -186,3 +186,12 @@ begin
                     end if;
                 else
                     if char_count < 32 then
+                        write(current_line, char);
+                        char_count := char_count + 1;
+                    end if;
+                end if;
+            end if;
+        end if;
+    end process TXT_OUTPUT;
+            
+end architecture;
