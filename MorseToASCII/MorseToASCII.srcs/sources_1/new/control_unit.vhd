@@ -4,90 +4,83 @@ use ieee.numeric_std.all;
 
 entity control_unit is
     port (
-        clk         : in  std_logic;
-        reset       : in  std_logic;
-        morse_in    : in  std_logic;
-        flag_dash_thresh   : in std_logic;
-        flag_char_end      : in std_logic;
-        flag_space_end     : in std_logic;
-        flag_buff_has_data : in std_logic;
-        control_signals  : out std_logic_vector(4 downto 0) 
+        clk             : in  std_logic;
+        reset           : in  std_logic;
+        morse_in        : in  std_logic;
+        
+        -- Flags from Datapath
+        flag_char_end   : in  std_logic; 
+        flag_space_end  : in  std_logic; 
+        
+        -- Control Signals
+        ctrl_clr_all    : out std_logic;
+        ctrl_inc_one    : out std_logic;
+        ctrl_inc_zero   : out std_logic;
+        ctrl_proc_pulse : out std_logic; 
+        ctrl_proc_gap   : out std_logic; 
+        ctrl_dec_char   : out std_logic;
+        ctrl_dec_space  : out std_logic
     );
 end entity control_unit;
 
 architecture microprogrammed of control_unit is
 
+    -- [Sequence Control (3 bits)] | [Control Signals (7 bits)]
     constant C_SEQ_BITS  : integer := 3;
-    constant C_CTRL_BITS : integer := 5;
+    constant C_CTRL_BITS : integer := 7;
     constant C_UCODE_WIDTH : integer := C_SEQ_BITS + C_CTRL_BITS;
 
-    -- Sequence Constants
+    -- Sequence Commands
     constant SEQ_NEXT       : std_logic_vector(2 downto 0) := "000";
-    constant SEQ_JMP_HIGH   : std_logic_vector(2 downto 0) := "001";
-    constant SEQ_CHK_LOW    : std_logic_vector(2 downto 0) := "010";
-    constant SEQ_BRANCH_SYM : std_logic_vector(2 downto 0) := "011";
-    constant SEQ_CHK_RISE   : std_logic_vector(2 downto 0) := "100";
-    constant SEQ_TO_GAP     : std_logic_vector(2 downto 0) := "101"; 
-    constant SEQ_RESET      : std_logic_vector(2 downto 0) := "111";
+    constant SEQ_JMP_HIGH   : std_logic_vector(2 downto 0) := "001"; -- Jump if Input=1
+    constant SEQ_CHK_FALL   : std_logic_vector(2 downto 0) := "010"; -- Check Fall (1->0)
+    constant SEQ_CHK_RISE   : std_logic_vector(2 downto 0) := "011"; -- Check Rise (0->1)
+    constant SEQ_GOTO_IDLE  : std_logic_vector(2 downto 0) := "100"; 
+    constant SEQ_GOTO_LOW   : std_logic_vector(2 downto 0) := "101"; 
 
-    -- Control Signals (Output Naming)
-    constant OUT_NOP          : std_logic_vector(4 downto 0) := "00000";
-    constant OUT_CLR_ALL      : std_logic_vector(4 downto 0) := "00001";
-    constant OUT_INC_ONE      : std_logic_vector(4 downto 0) := "00010";
-    constant OUT_INC_ZERO     : std_logic_vector(4 downto 0) := "00011";
-    constant OUT_CLR_CNTS     : std_logic_vector(4 downto 0) := "00100"; 
-    constant OUT_SHIFT_DOT    : std_logic_vector(4 downto 0) := "00101";
-    constant OUT_SHIFT_DASH   : std_logic_vector(4 downto 0) := "00110";
-    constant OUT_SHIFT_SEP    : std_logic_vector(4 downto 0) := "00111";
-    constant OUT_DECODE_CHAR  : std_logic_vector(4 downto 0) := "01000";
-    constant OUT_DECODE_SPACE : std_logic_vector(4 downto 0) := "01001";
-
+    -- Control Signal Bit Positions
+    -- 6:clr, 5:inc1, 4:inc0, 3:proc_P, 2:proc_G, 1:dec_C, 0:dec_S
+    
     subtype t_uAddress is integer range 0 to 15;
     type t_control_store is array(0 to 15) of std_logic_vector(C_UCODE_WIDTH - 1 downto 0);
-    
-    function to_ucode(
-        seq  : std_logic_vector(C_SEQ_BITS - 1 downto 0);
-        ctrl : std_logic_vector(C_CTRL_BITS - 1 downto 0)
+
+    function ucode(
+        seq : std_logic_vector(2 downto 0);
+        c6, c5, c4, c3, c2, c1, c0 : std_logic
     ) return std_logic_vector is
     begin
-        return seq & ctrl;
+        return seq & c6 & c5 & c4 & c3 & c2 & c1 & c0;
     end function;
 
     function init_rom return t_control_store is
         variable rom : t_control_store := (others => (others => '0'));
     begin
-        -- 0: IDLE: Wait for Signal High
-        rom(0) := to_ucode(SEQ_JMP_HIGH,   OUT_CLR_ALL);
+        -- 0: IDLE
+        rom(0) := ucode(SEQ_JMP_HIGH, '1', '0', '0', '0', '0', '0', '0'); 
         
-        -- 1: MEASURE HIGH: Increment counter_one while Input is '1'
-        rom(1) := to_ucode(SEQ_CHK_LOW,    OUT_INC_ONE);
+        -- 1: ENTRY HIGH (Transitioned from Low)
+        -- Process previous Gap AND Start Incrementing One
+        -- If signal falls immediately (1-cycle dot), go to ENTRY LOW (Addr 3). Else Main Loop (Addr 2).
+        rom(1) := ucode(SEQ_CHK_FALL, '0', '1', '0', '0', '1', '0', '0'); 
         
-        -- 2: BRANCH: Decide Dot or Dash
-        rom(2) := to_ucode(SEQ_BRANCH_SYM, OUT_NOP);
-        
-        -- 3: ACTION DOT: Shift Dot, then GOTO GAP (Addr 5)
-        -- FIXED: Menggunakan SEQ_TO_GAP untuk menghindari eksekusi baris 4
-        rom(3) := to_ucode(SEQ_TO_GAP,     OUT_SHIFT_DOT); 
-        
-        -- 4: ACTION DASH: Shift Dash, then GOTO GAP (Addr 5)
-        rom(4) := to_ucode(SEQ_TO_GAP,     OUT_SHIFT_DASH);
-        
-        -- 5: MEASURE GAP: Increment counter_zero while Input is '0'
-        rom(5) := to_ucode(SEQ_CHK_RISE,   OUT_INC_ZERO);
-        
-        -- 6: NEW SIGNAL: Shift Separator, then JMP HIGH (Addr 1)
-        rom(6) := to_ucode(SEQ_JMP_HIGH,   OUT_SHIFT_SEP);
-        
-        -- 7: DECODE CHAR: Decode buffer, then GOTO GAP (Addr 5)
-        -- FIXED: Kembali ke Gap Measurement agar counter_zero tidak reset (bisa deteksi Spasi)
-        rom(7) := to_ucode(SEQ_TO_GAP,     OUT_DECODE_CHAR); 
-        
-        -- 8 & 9 Unused in this logic
-        rom(8) := to_ucode(SEQ_RESET,      OUT_NOP);
-        rom(9) := to_ucode(SEQ_RESET,      OUT_NOP);      
-        
-        -- 10: DECODE SPACE: Decode Space, then RESET
-        rom(10) := to_ucode(SEQ_RESET,     OUT_DECODE_SPACE);
+        -- 2: MAIN HIGH LOOP
+        -- Inc One
+        rom(2) := ucode(SEQ_CHK_FALL, '0', '1', '0', '0', '0', '0', '0');
+
+        -- 3: ENTRY LOW (Transitioned from High)
+        -- Process previous Pulse AND Start Incrementing Zero
+        -- If signal rises immediately (1-cycle gap), go to ENTRY HIGH (Addr 1). Else Main Loop (Addr 4).
+        rom(3) := ucode(SEQ_CHK_RISE, '0', '0', '1', '1', '0', '0', '0');
+
+        -- 4: MAIN LOW LOOP
+        -- Inc Zero. Check Flags/Rise.
+        rom(4) := ucode(SEQ_CHK_RISE, '0', '0', '1', '0', '0', '0', '0');
+
+        -- 5: DECODE CHAR
+        rom(5) := ucode(SEQ_GOTO_LOW, '0', '0', '0', '0', '0', '1', '0');
+
+        -- 6: DECODE SPACE
+        rom(6) := ucode(SEQ_GOTO_IDLE,'0', '0', '0', '0', '0', '0', '1');
 
         return rom;
     end function;
@@ -97,6 +90,8 @@ architecture microprogrammed of control_unit is
     signal uPC      : t_uAddress := 0;
     signal Next_uPC : t_uAddress;
     signal uIR      : std_logic_vector(C_UCODE_WIDTH - 1 downto 0);
+    signal seq_cmd  : std_logic_vector(2 downto 0);
+
 begin
 
     process(clk, reset)
@@ -109,63 +104,56 @@ begin
     end process;
 
     uIR <= Control_Store(uPC);
-
-    control_signals <= uIR(C_CTRL_BITS - 1 downto 0);
     
-    process(uPC, uIR, morse_in, flag_dash_thresh, flag_char_end, flag_space_end, flag_buff_has_data)
-        variable seq_cmd : std_logic_vector(C_SEQ_BITS - 1 downto 0);
+    ctrl_clr_all    <= uIR(6);
+    ctrl_inc_one    <= uIR(5);
+    ctrl_inc_zero   <= uIR(4);
+    ctrl_proc_pulse <= uIR(3);
+    ctrl_proc_gap   <= uIR(2);
+    ctrl_dec_char   <= uIR(1);
+    ctrl_dec_space  <= uIR(0);
+    
+    seq_cmd <= uIR(C_UCODE_WIDTH - 1 downto C_CTRL_BITS);
+
+    process(uPC, seq_cmd, morse_in, flag_char_end, flag_space_end)
     begin
-        seq_cmd := uIR(C_UCODE_WIDTH - 1 downto C_CTRL_BITS);
-        
-        Next_uPC <= uPC + 1; -- next address
-        
+        Next_uPC <= uPC + 1; -- Default
+
         case seq_cmd is
-            when SEQ_NEXT =>
-                Next_uPC <= uPC + 1;
-                
-            when SEQ_RESET =>
-                Next_uPC <= 0;
-                
-            -- Logic sequence untuk lompat ke measure gap (Addr 5)
-            when SEQ_TO_GAP =>
-                Next_uPC <= 5;
-                
-            when SEQ_JMP_HIGH =>
-                if morse_in = '1' then
-                    Next_uPC <= 1; -- measure high
-                else
-                    Next_uPC <= uPC; -- wait 
+            when SEQ_NEXT => Next_uPC <= uPC + 1;
+            when SEQ_GOTO_IDLE => Next_uPC <= 0;
+            
+            when SEQ_GOTO_LOW => 
+                Next_uPC <= 4; -- Return to Main Low Loop
+
+            when SEQ_JMP_HIGH => -- IDLE Logic
+                if morse_in = '1' then 
+                    Next_uPC <= 2; -- Go to Main High (Skip Entry proc logic for first pulse)
+                else 
+                    Next_uPC <= 0; 
                 end if;
 
-            when SEQ_CHK_LOW =>
+            when SEQ_CHK_FALL => -- HIGH Logic
                 if morse_in = '0' then
-                    Next_uPC <= 2; -- Pulse ended, go decide
+                    Next_uPC <= 3; -- Fall detected! Go to ENTRY LOW (Process Pulse)
                 else
-                    Next_uPC <= uPC; -- Keep measuring
+                    Next_uPC <= 2; -- Stay in Main High
                 end if;
 
-            when SEQ_BRANCH_SYM =>
-                if flag_dash_thresh = '1' then
-                    Next_uPC <= 4; -- Go to Dash
-                else
-                    Next_uPC <= 3; -- Go to Dot
-                end if;
-
-            when SEQ_CHK_RISE =>
+            when SEQ_CHK_RISE => -- LOW Logic
                 if morse_in = '1' then
-                    Next_uPC <= 6; -- New Pulse
+                    Next_uPC <= 1; -- Rise detected! Go to ENTRY HIGH (Process Gap)
                 else
-                    if (flag_space_end = '1') then
-                        Next_uPC <= 10; -- Decode Space
-                    elsif (flag_char_end = '1' and flag_buff_has_data = '1') then
-                        Next_uPC <= 7;  -- Decode Char
+                    if flag_space_end = '1' then
+                        Next_uPC <= 6;
+                    elsif flag_char_end = '1' then
+                        Next_uPC <= 5;
                     else
-                        Next_uPC <= uPC; -- Keep measuring gap
+                        Next_uPC <= 4; -- Stay in Main Low
                     end if;
                 end if;
 
-            when others =>
-                Next_uPC <= 0;
+            when others => Next_uPC <= 0;
         end case;
     end process;
 
