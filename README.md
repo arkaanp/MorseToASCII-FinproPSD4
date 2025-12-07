@@ -43,7 +43,7 @@ Decoder ini menggunakan pendekatan *Shift Register* dengan *encoding* internal y
 ### 2. Micro-Programmed Control Unit (control_unit.vhd)
 Modul ini bertindak sebagai otak eksekusi yang menggunakan **Microprogrammed FSM** untuk menentukan status dekoder Morse berikutnya dan menghasilkan sinyal kontrol hardware yang spesifik.
 
-* **Arsitektur:** Menggunakan Control Store (ROM) berukuran 16 baris yang menyimpan Microinstructions (20-bit, 3-bit Sequencing + 7-bit Control Signals).
+* **Arsitektur:** Menggunakan Control Store (ROM) berukuran 16 baris yang menyimpan Microinstructions (10-bit, 3-bit Sequencing + 7-bit Control Signals).
 * **Instruksi Mikro (Control Signals) yang Dikeluarkan:** * `ctrl_clr_all`: Mereset *counter* (`counter_one` dan `counter_zero`).
     * `ctrl_inc_one`: Menambah `counter_one` (mengukur durasi Pulse/DOT/DASH).
     * `ctrl_inc_zero`: Menambah `counter_zero` (mengukur durasi Gap/Pemisah).
