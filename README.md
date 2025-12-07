@@ -12,13 +12,13 @@ Sistem ini dirancang untuk:
 
 ## 🛠️ Struktur File
 
-* `morse_decoder.vhd`: Modul utama decoder morse. Berisi logika FSM, counter durasi, dan shift register untuk pengenalan pola.
-* `control_unit.vhd`: Unit kendali prosesor sederhana berbasis ROM (Control Store) yang memetakan *Opcode* ke sinyal kontrol (*Control Signals*).
+* `morse_decoder.vhd`: Berisi Unit Data (Datapath), termasuk counter durasi, shift register, dan logika eksekusi (seperti shifting dan padding), yang diatur oleh control signals dari control_unit.vhd.
+* `control_unit.vhd`: mengimplementasikan Microprogrammed Control Unit yang menggunakan memori ROM (Control Store) untuk menyimpan microinstructions guna menentukan status FSM berikutnya dan menghasilkan control signals untuk mengendalikan morse_decoder.vhd.
 * `testbench.vhd`: File simulasi (testbench) untuk memverifikasi fungsionalitas decoder dengan mengirimkan stimulus sinyal morse.
 
 ## ⚙️ Cara Kerja (Technical Implementation)
 
-### 1. Morse Decoder Logic
+### 1. Morse Decoder Logic (morse_decoder.vhd)
 Decoder ini menggunakan pendekatan *Shift Register* dengan *encoding* internal yang unik untuk membedakan Dot dan Dash dalam satu register.
 
 * **Logika Sinyal:**
@@ -38,14 +38,26 @@ Decoder ini menggunakan pendekatan *Shift Register* dengan *encoding* internal y
     2.  Jika terdeteksi **Dash**, geser masuk bit string `"11"`.
     3.  Saat jeda antar simbol selesai, geser masuk bit `'0'` sebagai pemisah.
 
-    *Contoh:* Huruf **'A'** (`.-`) akan tersimpan di register sebagai `...01011` (1=Dot, 0=Spasi, 11=Dash).
+    *Contoh:* Huruf 'A' (.-) akan tersimpan di register sebagai `"...01011"`. Pola yang dicari untuk di-decode adalah `"1011"` yang disejajarkan ke kanan, misalnya `"0000001011"`.
 
-### 2. Micro-Programmed Control Unit
-Modul ini bertindak sebagai otak eksekusi yang mengambil instruksi makro dan menerjemahkannya menjadi sinyal kontrol hardware.
+### 2. Micro-Programmed Control Unit (control_unit.vhd)
+Modul ini bertindak sebagai otak eksekusi yang menggunakan **Microprogrammed FSM** untuk menentukan status dekoder Morse berikutnya dan menghasilkan sinyal kontrol hardware yang spesifik.
 
-* **Arsitektur:** Menggunakan **Control Store (ROM)** berukuran 256 baris.
-* **Instruksi yang Didukung:** `LDA`, `STA`, `ADD`, `SUB`, `JMP`, `CMP`, `HLT`, dll.
-* **Sequencing:** Mendukung `SEQ_NEXT`, `SEQ_FETCH`, `SEQ_DECODE`, dan `SEQ_HLT`.
+* **Arsitektur:** Menggunakan Control Store (ROM) berukuran 16 baris yang menyimpan Microinstructions (20-bit, 3-bit Sequencing + 7-bit Control Signals).
+* **Instruksi Mikro (Control Signals) yang Dikeluarkan:** * `ctrl_clr_all`: Mereset *counter* (`counter_one` dan `counter_zero`).
+    * `ctrl_inc_one`: Menambah `counter_one` (mengukur durasi Pulse/DOT/DASH).
+    * `ctrl_inc_zero`: Menambah `counter_zero` (mengukur durasi Gap/Pemisah).
+    * `ctrl_proc_pulse`: Memicu pemrosesan Pulse (Dot/Dash) dan memuat hasilnya ke *shift register*.
+    * `ctrl_proc_gap`: Memicu pemrosesan Gap (Pemisah simbol) dan memuat bit '0' ke *shift register*.
+    * `ctrl_dec_char`: Mengaktifkan dekode Character (pembacaan *shift register* dan output ASCII).
+    * `ctrl_dec_space`: Mengaktifkan output ASCII untuk Spasi (`x"20"`).
+* **Sequencing (Perintah FSM/ROM) yang Didukung:**
+    * `SEQ_NEXT`: Pindah ke instruksi berikutnya (`uPC + 1`).
+    * `SEQ_JMP_HIGH`: Lompat jika input Morse adalah '1' (untuk transisi dari IDLE).
+    * `SEQ_CHK_FALL`: Periksa transisi `morse_in` dari '1' ke '0' (akhir Pulse).
+    * `SEQ_CHK_RISE`: Periksa transisi `morse_in` dari '0' ke '1' (akhir Gap).
+    * `SEQ_GOTO_IDLE`: Lompat kembali ke alamat 0 (IDLE).
+    * `SEQ_GOTO_LOW`: Lompat kembali ke alamat 4 (Main Low Loop).
 
 ## 👥 Authors
 
@@ -53,9 +65,9 @@ Project ini dikerjakan oleh kelompok yang beranggotakan:
 
 | No. | Nama Anggota | NPM |
 | :--- | :--- | :--- |
-| 1. | [Nama Anggota 1] | [NPM 1] |
-| 2. | [Nama Anggota 2] | [NPM 2] |
-| 3. | [Nama Anggota 3] | [NPM 3] |
-| 4. | [Nama Anggota 4] | [NPM 4] |
+| 1. | Arkaan Pasya Seplitara | 2406408073 |
+| 2. | Qais Ismail | 2406487090 |
+| 3. | Danish Al Fayyadh Sunarta | 2406416951 |
+| 4. | Raihan Muhammad Nafis Al-Kautsar | 2406413451 |
 
 ---
